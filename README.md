@@ -2,6 +2,8 @@
 
 Generate professional LinkedIn and Twitter posts with AI. Built with Next.js 16, Supabase, Prisma, OpenAI, and Stripe.
 
+**[🚀 Live Demo](https://project-298qu.vercel.app/)**
+
 ## Features
 
 - **AI-Powered Generation** — GPT-4o mini streams content in real-time
@@ -93,6 +95,7 @@ Required GitHub repository secrets:
 | `VERCEL_TOKEN` | Vercel API token |
 | `VERCEL_ORG_ID` | Vercel team/user org ID |
 | `VERCEL_PROJECT_ID` | Vercel project ID |
+| `DIRECT_URL` | Direct connection string for migrations |
 
 How to get org/project IDs:
 
