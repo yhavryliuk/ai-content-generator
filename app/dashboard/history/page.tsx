@@ -24,6 +24,14 @@ export default async function HistoryPage() {
   const posts = await prisma.post.findMany({
     where: { authorId: user.id },
     orderBy: { createdAt: "desc" },
+    take: 50,
+    select: {
+      id: true,
+      topic: true,
+      platform: true,
+      content: true,
+      createdAt: true,
+    },
   });
 
   if (posts.length === 0) {
