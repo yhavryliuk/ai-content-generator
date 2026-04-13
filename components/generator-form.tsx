@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Badge } from "@/components/ui/badge";
 import { UpgradeModal } from "@/components/upgrade-modal";
+import { MarkdownContent } from "@/components/markdown-content";
 import { validateGeneration } from "@/app/actions/generate-post";
 import { Loader2, Copy, Check, Briefcase, MessageCircle } from "lucide-react";
 
@@ -166,9 +167,7 @@ export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                {output}
-              </div>
+              <MarkdownContent content={output} />
             </CardContent>
           </Card>
         )}

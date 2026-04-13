@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MarkdownContent } from "@/components/markdown-content";
 
 export default async function HistoryPage() {
   const supabase = await createClient();
@@ -55,9 +56,7 @@ export default async function HistoryPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="whitespace-pre-wrap text-sm leading-relaxed">
-              {post.content}
-            </p>
+            <MarkdownContent content={post.content} />
           </CardContent>
         </Card>
       ))}
