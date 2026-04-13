@@ -44,3 +44,5 @@ yarn-error.log*
 .vscode/
 skills-lock.json
 next-env.d.ts
+
+/lib/generated/prisma
