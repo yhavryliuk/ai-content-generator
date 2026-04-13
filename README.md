@@ -63,7 +63,15 @@ cp .env.example .env.local
 pnpm prisma migrate dev
 ```
 
-### 4. Start the dev server
+### 4. Generate Prisma Client
+
+Run this after schema changes or if you pull fresh changes with updated Prisma models:
+
+```bash
+pnpm prisma generate
+```
+
+### 5. Start the dev server
 
 ```bash
 pnpm dev
