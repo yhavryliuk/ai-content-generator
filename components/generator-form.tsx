@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useTransition, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,69 +18,68 @@ interface GeneratorFormProps {
 }
 
 export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
+  const router = useRouter();
   const [topic, setTopic] = useState("");
   const [platform, setPlatform] = useState(["LinkedIn"]);
   const [output, setOutput] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [copied, setCopied] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [currentUsed, setCurrentUsed] = useState(used);
   const abortRef = useRef<AbortController | null>(null);
 
-  const handleGenerate = async () => {
+  const handleGenerate = () => {
     if (!topic.trim()) return;
 
-    // Validate limits first via server action
-    const validation = await validateGeneration();
+    startTransition(async () => {
+      const validation = await validateGeneration();
 
-    if (!validation.canGenerate) {
-      if (validation.error === "upgrade_required") {
-        setShowUpgrade(true);
-      }
-      return;
-    }
-
-    setIsGenerating(true);
-    setOutput("");
-
-    abortRef.current = new AbortController();
-
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, platform: platform[0] }),
-        signal: abortRef.current.signal,
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        if (data.error === "upgrade_required") {
+      if (!validation.canGenerate) {
+        if (validation.error === "upgrade_required") {
           setShowUpgrade(true);
-          return;
         }
-        throw new Error(data.error || "Generation failed");
+        return;
       }
 
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
+      setOutput("");
+      abortRef.current = new AbortController();
 
-      if (!reader) throw new Error("No response body");
+      try {
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic, platform: platform[0] }),
+          signal: abortRef.current.signal,
+        });
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const text = decoder.decode(value, { stream: true });
-        setOutput((prev) => prev + text);
+        if (!response.ok) {
+          const data = await response.json();
+          if (data.error === "upgrade_required") {
+            setShowUpgrade(true);
+            return;
+          }
+          throw new Error(data.error || "Generation failed");
+        }
+
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+
+        if (!reader) throw new Error("No response body");
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const text = decoder.decode(value, { stream: true });
+          setOutput((prev) => prev + text);
+        }
+
+        setCurrentUsed((prev) => prev + 1);
+        router.refresh();
+      } catch (err) {
+        if (err instanceof Error && err.name === "AbortError") return;
+        console.error("Generation error:", err);
       }
-
-      setCurrentUsed((prev) => prev + 1);
-    } catch (err) {
-      if (err instanceof Error && err.name === "AbortError") return;
-      console.error("Generation error:", err);
-    } finally {
-      setIsGenerating(false);
-    }
+    });
   };
 
   const handleCopy = async () => {
@@ -130,9 +130,9 @@ export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
 
               <Button
                 onClick={handleGenerate}
-                disabled={isGenerating || !topic.trim()}
+                disabled={isPending || !topic.trim()}
               >
-                {isGenerating ? (
+                {isPending ? (
                   <>
                     <Loader2 className="animate-spin" />
                     Generating...

@@ -7,6 +7,7 @@ const FREE_POST_LIMIT = 3;
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
+  ...(process.env.OPENAI_API_BASE_URL && { baseURL: process.env.OPENAI_API_BASE_URL }),
 });
 
 export async function POST(request: Request) {
@@ -56,24 +57,33 @@ export async function POST(request: Request) {
     );
   }
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    stream: true,
-    messages: [
-      {
-        role: "system",
-        content: `You are a professional social media content creator. Write a compelling ${platform} post about the given topic. ${
-          platform === "Twitter"
-            ? "Keep it under 280 characters."
-            : "Write a detailed, engaging post with proper formatting."
-        }`,
-      },
-      {
-        role: "user",
-        content: `Write a ${platform} post about: ${topic}`,
-      },
-    ],
-  });
+  let completion: AsyncIterable<OpenAI.Chat.Completions.ChatCompletionChunk>;
+  try {
+    completion = await openai.chat.completions.create({
+      model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
+      stream: true,
+      messages: [
+        {
+          role: "system",
+          content: `You are a professional social media content creator. Write a compelling ${platform} post about the given topic. ${
+            platform === "Twitter"
+              ? "Keep it under 280 characters."
+              : "Write a detailed, engaging post with proper formatting."
+          }`,
+        },
+        {
+          role: "user",
+          content: `Write a ${platform} post about: ${topic}`,
+        },
+      ],
+    });
+  } catch (err) {
+    console.error("OpenAI error:", err);
+    return NextResponse.json(
+      { error: "AI service unavailable" },
+      { status: 502 }
+    );
+  }
 
   let fullContent = "";
 
