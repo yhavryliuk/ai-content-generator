@@ -8,7 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Badge } from "@/components/ui/badge";
 import { UpgradeModal } from "@/components/upgrade-modal";
 import { validateGeneration } from "@/app/actions/generate-post";
-import { Loader2, Copy, Check, Linkedin, Twitter } from "lucide-react";
+import { Loader2, Copy, Check, Briefcase, MessageCircle } from "lucide-react";
 
 interface GeneratorFormProps {
   used: number;
@@ -18,7 +18,7 @@ interface GeneratorFormProps {
 
 export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
   const [topic, setTopic] = useState("");
-  const [platform, setPlatform] = useState("LinkedIn");
+  const [platform, setPlatform] = useState(["LinkedIn"]);
   const [output, setOutput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -48,7 +48,7 @@ export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, platform }),
+        body: JSON.stringify({ topic, platform: platform[0] }),
         signal: abortRef.current.signal,
       });
 
@@ -115,16 +115,15 @@ export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
 
             <div className="flex items-center justify-between">
               <ToggleGroup
-                type="single"
                 value={platform}
-                onValueChange={(val) => val && setPlatform(val)}
+                onValueChange={(val) => val.length > 0 && setPlatform(val.slice(-1))}
               >
                 <ToggleGroupItem value="LinkedIn" aria-label="LinkedIn">
-                  <Linkedin />
+                  <Briefcase />
                   LinkedIn
                 </ToggleGroupItem>
                 <ToggleGroupItem value="Twitter" aria-label="Twitter">
-                  <Twitter />
+                  <MessageCircle />
                   Twitter
                 </ToggleGroupItem>
               </ToggleGroup>

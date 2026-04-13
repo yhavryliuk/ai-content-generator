@@ -12,11 +12,11 @@ export default function HomePage() {
           <span className="text-lg font-semibold">AI Content Gen</span>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="ghost" asChild>
-            <Link href="/login">Sign in</Link>
+          <Button variant="ghost" render={<Link href="/login" />}>
+            Sign in
           </Button>
-          <Button asChild>
-            <Link href="/login">Get Started</Link>
+          <Button render={<Link href="/login" />}>
+            Get Started
           </Button>
         </div>
       </header>
@@ -37,11 +37,9 @@ export default function HomePage() {
         </p>
 
         <div className="flex gap-4">
-          <Button size="lg" asChild>
-            <Link href="/login">
-              Start for Free
-              <Sparkles />
-            </Link>
+          <Button size="lg" render={<Link href="/login" />}>
+            Start for Free
+            <Sparkles />
           </Button>
         </div>
 
