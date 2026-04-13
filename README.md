@@ -79,6 +79,26 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## GitHub Actions CI/CD (Vercel)
+
+Workflow file: `.github/workflows/ci-cd-vercel.yml`
+
+- On every PR to `main`: runs `pnpm check`, `pnpm test`, and `pnpm build`
+- On every push to `main`: runs CI and then deploys to Vercel
+
+Required GitHub repository secrets:
+
+| Secret | Description |
+|---|---|
+| `VERCEL_TOKEN` | Vercel API token |
+| `VERCEL_ORG_ID` | Vercel team/user org ID |
+| `VERCEL_PROJECT_ID` | Vercel project ID |
+
+How to get org/project IDs:
+
+1. Run `vercel link` locally once in the project
+2. Use values from `.vercel/project.json`
+
 ## Stripe Local Testing
 
 Install the [Stripe CLI](https://docs.stripe.com/stripe-cli) and forward webhooks to your local server:
