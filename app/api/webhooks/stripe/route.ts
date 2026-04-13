@@ -1,9 +1,19 @@
 import { NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripeClient } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import Stripe from "stripe";
 
 export async function POST(request: Request) {
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    return NextResponse.json(
+      { error: "Webhook secret is not configured" },
+      { status: 500 }
+    );
+  }
+
+  const stripe = getStripeClient();
+
   const body = await request.text();
   const signature = request.headers.get("stripe-signature");
 
@@ -17,7 +27,7 @@ export async function POST(request: Request) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      webhookSecret
     );
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";

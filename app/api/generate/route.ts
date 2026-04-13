@@ -5,12 +5,22 @@ import OpenAI from "openai";
 
 const FREE_POST_LIMIT = 3;
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-  ...(process.env.OPENAI_API_BASE_URL && { baseURL: process.env.OPENAI_API_BASE_URL }),
-});
-
 export async function POST(request: Request) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "OPENAI_API_KEY is not configured" },
+      { status: 500 }
+    );
+  }
+
+  const openai = new OpenAI({
+    apiKey,
+    ...(process.env.OPENAI_API_BASE_URL && {
+      baseURL: process.env.OPENAI_API_BASE_URL,
+    }),
+  });
+
   const supabase = await createClient();
   const {
     data: { user },
