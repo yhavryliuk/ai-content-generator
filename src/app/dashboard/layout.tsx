@@ -1,7 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/shared/lib/supabase/server";
+import { prisma } from "@/shared/lib/prisma";
 import { redirect } from "next/navigation";
-import { DashboardShell } from "@/components/dashboard-shell";
+import { DashboardShell } from "@/features/dashboard/components/dashboard-shell";
 
 export default async function DashboardLayout({
   children,

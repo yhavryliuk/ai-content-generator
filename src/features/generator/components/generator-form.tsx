@@ -2,13 +2,13 @@
 
 import { useState, useTransition, useRef, useOptimistic } from "react";
 import { useRouter } from "next/navigation";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Badge } from "@/components/ui/badge";
-import { UpgradeModal } from "@/components/upgrade-modal";
-import { validateGeneration } from "@/app/actions/generate-post";
+import { Textarea } from "@/shared/components/ui/textarea";
+import { Button } from "@/shared/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { ToggleGroup, ToggleGroupItem } from "@/shared/components/ui/toggle-group";
+import { Badge } from "@/shared/components/ui/badge";
+import { UpgradeModal } from "@/features/billing/components/upgrade-modal";
+import { validateGeneration } from "@/features/generator/actions/validate-generation";
 import { Loader2, Briefcase, MessageCircle } from "lucide-react";
 import { GeneratedContent } from "./generated-content";
 

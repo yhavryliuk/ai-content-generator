@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/shared/lib/supabase/server";
+import { prisma } from "@/shared/lib/prisma";
 import { redirect } from "next/navigation";
 import {
   Card,
@@ -7,9 +7,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { MarkdownContent } from "@/components/markdown-content";
+} from "@/shared/components/ui/card";
+import { Badge } from "@/shared/components/ui/badge";
+import { MarkdownContent } from "@/features/generator/components/markdown-content";
 
 export default async function HistoryPage() {
   const supabase = await createClient();

@@ -5,8 +5,8 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
+} from "@/shared/components/ui/sidebar";
+import { Separator } from "@/shared/components/ui/separator";
 import { PenLine, History } from "lucide-react";
 import { DashboardSidebar, UserInfo } from "./dashboard-sidebar";
 

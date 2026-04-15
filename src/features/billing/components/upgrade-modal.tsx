@@ -8,9 +8,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { createCheckout } from "@/app/actions/create-checkout";
+} from "@/shared/components/ui/dialog";
+import { Button } from "@/shared/components/ui/button";
+import { createCheckout } from "@/features/billing/actions/create-checkout";
 import { Loader2, Sparkles } from "lucide-react";
 
 interface UpgradeModalProps {

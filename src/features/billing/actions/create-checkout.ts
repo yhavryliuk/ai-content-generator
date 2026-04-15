@@ -1,8 +1,8 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
-import { getStripeClient } from "@/lib/stripe";
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/shared/lib/supabase/server";
+import { getStripeClient } from "@/shared/lib/stripe";
+import { prisma } from "@/shared/lib/prisma";
 
 export async function createCheckout() {
   const stripe = getStripeClient();

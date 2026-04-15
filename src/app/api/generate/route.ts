@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/shared/lib/supabase/server";
+import { prisma } from "@/shared/lib/prisma";
 import OpenAI from "openai";
 
 const FREE_POST_LIMIT = 3;

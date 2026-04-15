@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { cn } from "../src/lib/utils";
+import { cn } from "../src/shared/lib/utils";
 
 describe("cn", () => {
   it("merges tailwind classes keeping the last conflicting utility", () => {

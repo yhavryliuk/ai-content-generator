@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
 import { Sparkles, Zap, Shield, PenLine } from "lucide-react";
 
 export default function HomePage() {
@@ -12,10 +12,10 @@ export default function HomePage() {
           <span className="text-lg font-semibold">AI Content Gen</span>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="ghost" render={<Link href="/login" />}>
+          <Button variant="ghost" nativeButton={false} render={<Link href="/login" />}>
             Sign in
           </Button>
-          <Button render={<Link href="/login" />}>
+          <Button nativeButton={false} render={<Link href="/login" />}>
             Get Started
           </Button>
         </div>
@@ -37,7 +37,7 @@ export default function HomePage() {
         </p>
 
         <div className="flex gap-4">
-          <Button size="lg" render={<Link href="/login" />}>
+          <Button size="lg" nativeButton={false} render={<Link href="/login" />}>
             Start for Free
             <Sparkles />
           </Button>

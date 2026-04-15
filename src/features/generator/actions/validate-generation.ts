@@ -1,7 +1,7 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/shared/lib/supabase/server";
+import { prisma } from "@/shared/lib/prisma";
 
 const FREE_POST_LIMIT = 3;
 

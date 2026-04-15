@@ -1,7 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/shared/lib/supabase/server";
+import { prisma } from "@/shared/lib/prisma";
 import { redirect } from "next/navigation";
-import { GeneratorForm } from "@/components/generator-form";
+import { GeneratorForm } from "@/features/generator/components/generator-form";
 
 const FREE_POST_LIMIT = 3;
 
