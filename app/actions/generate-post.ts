@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 const FREE_POST_LIMIT = 3;
 
 export async function validateGeneration() {
+  'use server';
+  
   const supabase = await createClient();
   const {
     data: { user },

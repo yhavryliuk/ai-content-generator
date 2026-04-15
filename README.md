@@ -1,4 +1,4 @@
-# AI Content Generator
+# AI Content Generator (MVP)
 
 Generate professional LinkedIn and Twitter posts with AI. Built with Next.js 16, Supabase, Prisma, OpenAI, and Stripe.
 

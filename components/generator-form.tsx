@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useRef } from "react";
+import { useState, useTransition, useRef, useOptimistic } from "react";
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -8,9 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Badge } from "@/components/ui/badge";
 import { UpgradeModal } from "@/components/upgrade-modal";
-import { MarkdownContent } from "@/components/markdown-content";
 import { validateGeneration } from "@/app/actions/generate-post";
-import { Loader2, Copy, Check, Briefcase, MessageCircle } from "lucide-react";
+import { Loader2, Briefcase, MessageCircle } from "lucide-react";
+import { GeneratedContent } from "./generated-content";
 
 interface GeneratorFormProps {
   used: number;
@@ -23,16 +23,18 @@ export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
   const [topic, setTopic] = useState("");
   const [platform, setPlatform] = useState(["LinkedIn"]);
   const [output, setOutput] = useState("");
-  const [isPending, startTransition] = useTransition();
-  const [copied, setCopied] = useState(false);
+  const [isGenerationPending, startGenerationTransition] = useTransition();
   const [showUpgrade, setShowUpgrade] = useState(false);
-  const [currentUsed, setCurrentUsed] = useState(used);
+  const [optimisticCurrentUsed, setOptimisticCurrentUsed] = useOptimistic(used);
   const abortRef = useRef<AbortController | null>(null);
+
+  const isFreePlan = plan === "FREE";
+  const isProPlan = plan === "PRO";
 
   const handleGenerate = () => {
     if (!topic.trim()) return;
 
-    startTransition(async () => {
+    startGenerationTransition(async () => {
       const validation = await validateGeneration();
 
       if (!validation.canGenerate) {
@@ -46,6 +48,7 @@ export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
       abortRef.current = new AbortController();
 
       try {
+        setOptimisticCurrentUsed((prev) => prev + 1);
         const response = await fetch("/api/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -74,7 +77,6 @@ export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
           setOutput((prev) => prev + text);
         }
 
-        setCurrentUsed((prev) => prev + 1);
         router.refresh();
       } catch (err) {
         if (err instanceof Error && err.name === "AbortError") return;
@@ -83,23 +85,17 @@ export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
     });
   };
 
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <>
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Create Content</h2>
-          {plan === "FREE" && (
+          {isFreePlan && (
             <Badge variant="outline">
-              {currentUsed}/{limit} posts used
+              {optimisticCurrentUsed}/{limit} posts used
             </Badge>
           )}
-          {plan === "PRO" && <Badge>PRO — Unlimited</Badge>}
+          {isProPlan && <Badge>PRO — Unlimited</Badge>}
         </div>
 
         <Card>
@@ -131,9 +127,9 @@ export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
 
               <Button
                 onClick={handleGenerate}
-                disabled={isPending || !topic.trim()}
+                disabled={isGenerationPending || !topic.trim()}
               >
-                {isPending ? (
+                {isGenerationPending ? (
                   <>
                     <Loader2 className="animate-spin" />
                     Generating...
@@ -147,29 +143,7 @@ export function GeneratorForm({ used, limit, plan }: GeneratorFormProps) {
         </Card>
 
         {output && (
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Generated Content</CardTitle>
-                <Button variant="ghost" size="sm" onClick={handleCopy}>
-                  {copied ? (
-                    <>
-                      <Check />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy />
-                      Copy
-                    </>
-                  )}
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <MarkdownContent content={output} />
-            </CardContent>
-          </Card>
+          <GeneratedContent output={output} />
         )}
       </div>
 
