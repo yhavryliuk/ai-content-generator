@@ -3,6 +3,7 @@
 import { createClient } from "@/shared/lib/supabase/client";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { LoginForm } from "@/features/auth/components/login-form";
 
 function GoogleIcon() {
   return (
@@ -47,14 +48,27 @@ export default function LoginPage() {
             Sign in to your account to continue
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          <LoginForm />
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
           <Button
             variant="outline"
             className="w-full"
             onClick={handleLogin}
           >
             <GoogleIcon />
-            Sign in with Google
+            Google
           </Button>
         </CardContent>
       </Card>

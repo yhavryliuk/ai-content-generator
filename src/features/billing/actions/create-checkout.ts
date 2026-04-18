@@ -2,7 +2,7 @@
 
 import { createClient } from "@/shared/lib/supabase/server";
 import { getStripeClient } from "@/shared/lib/stripe";
-import { prisma } from "@/shared/lib/prisma";
+import { findUser } from "@/shared/services/find-user";
 
 export async function createCheckout() {
   const stripe = getStripeClient();
@@ -16,9 +16,7 @@ export async function createCheckout() {
     return { error: "Not authenticated" };
   }
 
-  const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
-  });
+  const dbUser = await findUser(user.id);
 
   if (!dbUser) {
     return { error: "User not found" };

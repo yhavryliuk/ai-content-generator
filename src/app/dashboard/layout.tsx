@@ -1,7 +1,7 @@
 import { createClient } from "@/shared/lib/supabase/server";
-import { prisma } from "@/shared/lib/prisma";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/features/dashboard/components/dashboard-shell";
+import { getUserWithStats } from "@/features/users/services/get-user-with-stats";
 
 export default async function DashboardLayout({
   children,
@@ -17,10 +17,7 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
-    include: { _count: { select: { posts: true } } },
-  });
+  const dbUser = await getUserWithStats(user.id);
 
   if (!dbUser) {
     redirect("/login");

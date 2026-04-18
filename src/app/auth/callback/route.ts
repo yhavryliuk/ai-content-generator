@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/shared/lib/supabase/server";
-import { prisma } from "@/shared/lib/prisma";
+import { setupUser } from "@/features/auth/services/setup-user";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -12,14 +12,7 @@ export async function GET(request: Request) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.user) {
-      await prisma.user.upsert({
-        where: { id: data.user.id },
-        update: { email: data.user.email! },
-        create: {
-          id: data.user.id,
-          email: data.user.email!,
-        },
-      });
+      await setupUser(data.user.id, data.user.email!);
 
       return NextResponse.redirect(`${origin}${next}`);
     }

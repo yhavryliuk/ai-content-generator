@@ -8,7 +8,7 @@ import {
 } from "@/shared/components/ui/sidebar";
 import { Separator } from "@/shared/components/ui/separator";
 import { PenLine, History } from "lucide-react";
-import { DashboardSidebar, UserInfo } from "./dashboard-sidebar";
+import { DashboardSidebar, type UserInfo } from "./dashboard-sidebar";
 
 interface DashboardShellProps {
   user: UserInfo;
