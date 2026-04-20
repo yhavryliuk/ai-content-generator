@@ -1,8 +1,9 @@
 "use server"
 
 import { prisma } from "@/shared/lib/prisma";
+import { cache } from "react";
 
-export async function getUserWithStats(userId: string) {
+export const getUserWithStats = cache(async (userId: string) => {
   return await prisma.user.findUnique({
     where: { id: userId },
     include: { 
@@ -11,4 +12,4 @@ export async function getUserWithStats(userId: string) {
       } 
     },
   });
-}
+});

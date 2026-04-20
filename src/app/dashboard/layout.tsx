@@ -1,17 +1,14 @@
-import { createClient } from "@/shared/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/features/dashboard/components/dashboard-shell";
 import { getUserWithStats } from "@/features/users/services/get-user-with-stats";
+import { getCurrentUser } from "@/shared/services/get-current-user";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   if (!user) {
     redirect("/login");

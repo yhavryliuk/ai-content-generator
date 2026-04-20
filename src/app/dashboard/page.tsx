@@ -1,24 +1,18 @@
-import { createClient } from "@/shared/lib/supabase/server";
-import { prisma } from "@/shared/lib/prisma";
 import { redirect } from "next/navigation";
 import { GeneratorForm } from "@/features/generator/components/generator-form";
+import { getCurrentUser } from "@/shared/services/get-current-user";
+import { getUserWithStats } from "@/features/users/services/get-user-with-stats";
 
 const FREE_POST_LIMIT = 3;
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   if (!user) {
     redirect("/login");
   }
 
-  const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
-    include: { _count: { select: { posts: true } } },
-  });
+  const dbUser = await getUserWithStats(user.id);
 
   if (!dbUser) {
     redirect("/login");

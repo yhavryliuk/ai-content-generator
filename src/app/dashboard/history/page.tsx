@@ -1,4 +1,3 @@
-import { createClient } from "@/shared/lib/supabase/server";
 import { prisma } from "@/shared/lib/prisma";
 import { redirect } from "next/navigation";
 import {
@@ -10,12 +9,10 @@ import {
 } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { MarkdownContent } from "@/features/generator/components/markdown-content";
+import { getCurrentUser } from "@/shared/services/get-current-user";
 
 export default async function HistoryPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   if (!user) {
     redirect("/login");

@@ -15,7 +15,7 @@ export default function HomePage() {
           <Button variant="ghost" nativeButton={false} render={<Link href="/login" />}>
             Sign in
           </Button>
-          <Button nativeButton={false} render={<Link href="/login" />}>
+          <Button nativeButton={false} render={<Link href="/register" />}>
             Get Started
           </Button>
         </div>
@@ -37,7 +37,7 @@ export default function HomePage() {
         </p>
 
         <div className="flex gap-4">
-          <Button size="lg" nativeButton={false} render={<Link href="/login" />}>
+          <Button size="lg" nativeButton={false} render={<Link href="/register" />}>
             Start for Free
             <Sparkles />
           </Button>
